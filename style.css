@@ -345,6 +345,141 @@ textarea:focus {
   margin-bottom: 6px;
 }
 
+/* 📓 占卜日記 */
+.diary-area {
+  margin-top: 8px;
+}
+
+.diary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.diary-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+#toggle-diary-btn {
+  border-radius: 999px;
+  border: 1px solid #d9afc8;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  background: #fff7fb;
+  color: #8b5675;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+#toggle-diary-btn:hover {
+  background: #ffeaf6;
+}
+
+.diary-hint {
+  font-size: 0.8rem;
+  color: #8a6b7a;
+  margin: 0 0 8px;
+}
+
+.diary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.diary-list.hidden {
+  display: none;
+}
+
+.diary-list::-webkit-scrollbar {
+  width: 6px;
+}
+.diary-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.diary-list::-webkit-scrollbar-thumb {
+  background: rgba(192, 142, 175, 0.5);
+  border-radius: 999px;
+}
+
+/* 每一則日記 */
+.diary-entry {
+  background: #fffaf5;
+  border-radius: 12px;
+  border: 1px solid #ecd0b3;
+  padding: 8px 10px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.diary-entry-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.diary-date {
+  font-size: 0.78rem;
+  color: #a27b66;
+}
+
+.diary-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid #e2b9c7;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  background: #fff6fb;
+  color: #8b4c64;
+}
+
+.tag.mode-tag {
+  background: #fef3e6;
+  border-color: #e5c09b;
+  color: #875633;
+}
+.tag.topic-tag {
+  background: #f1ecff;
+  border-color: #bfb2f2;
+  color: #5b4ba0;
+}
+.tag.hex-tag {
+  background: #f7ecff;
+  border-color: #c7a8e2;
+  color: #6b4b8b;
+}
+
+.diary-question {
+  margin-top: 2px;
+  color: #6b4b56;
+}
+
+.diary-summary {
+  margin-top: 2px;
+  color: #8a5c6e;
+}
+
+.diary-label {
+  font-weight: 600;
+  margin-right: 2px;
+}
+
 /* 頁尾 */
 .site-footer {
   text-align: center;
@@ -371,5 +506,9 @@ textarea:focus {
 
   .bear-avatar {
     font-size: 2.6rem;
+  }
+
+  .diary-list {
+    max-height: 320px;
   }
 }
