@@ -1,8 +1,7 @@
 /* =============== 易經 64 卦資料（簡版） =============== */
 /*
   index(0-63) 對應六爻：底爻為 bit0，六爻為 bit5，1=陽，0=陰
-  這裡用簡單順序，不是傳統文王卦序，但對「網頁占卜」來說沒關係，
-  主要是讓同一組爻象會對應同一筆解說資料。
+  這裡用簡單順序，主要是讓同一組爻象會對應同一筆解說資料。
 */
 
 const hexagrams = [];
@@ -23,7 +22,7 @@ function createHex(id, name, pinyin, shortMeaning, trend, classicGua, classicXia
   };
 }
 
-// 先定義前 8 卦（乾坤屯蒙需訟師比）做示範，其餘用 placeholder 填滿 64 格
+// 前 8 卦示範
 hexagrams[0] = createHex(
   1,
   "乾為天",
@@ -112,7 +111,7 @@ hexagrams[7] = createHex(
   "適合拉近關係、尋找盟友，但也要看清楚對方的真心與穩定度。"
 );
 
-// 其餘 56 卦先塞入佔位資料（避免出錯）
+// 其餘先塞 placeholder，避免出錯
 for (let i = 8; i < 64; i++) {
   hexagrams[i] =
     hexagrams[i] ||
@@ -128,18 +127,16 @@ for (let i = 8; i < 64; i++) {
     );
 }
 
-/* =============== 工具：卦象生成 =============== */
+/* =============== 卦象生成 =============== */
 
-// 產生一爻：6~9 對應 老陰/少陽/少陰/老陽
+// 一爻：6~9（模擬三枚銅錢的結果）
 function randomLine() {
-  // 三枚銅錢法的總和：實作上直接用 6~9 隨機即可
   const val = 6 + Math.floor(Math.random() * 4); // 6,7,8,9
   return val;
 }
 
-// 將 6~9 轉成陰陽（0/1）
+// 6/8 陰；7/9 陽
 function isYang(lineVal) {
-  // 7,9 為陽；6,8 為陰
   return lineVal === 7 || lineVal === 9;
 }
 
@@ -148,18 +145,16 @@ function generateSixLines(mode) {
   const lines = [];
   for (let i = 0; i < 6; i++) {
     if (mode === "quick") {
-      // 只產生陰陽，不特別分老陰老陽
       const yang = Math.random() < 0.5;
-      lines.push(yang ? 7 : 8); // 用 7 代表陽，8 代表陰
+      lines.push(yang ? 7 : 8);
     } else {
-      // 三枚銅錢法
       lines.push(randomLine());
     }
   }
   return lines;
 }
 
-// 把六爻轉成 0~63 的 index（底爻是最右邊 bit）
+// 六爻轉 index（0~63）
 function linesToIndex(lines) {
   let idx = 0;
   for (let i = 0; i < 6; i++) {
@@ -170,8 +165,7 @@ function linesToIndex(lines) {
   }
   return idx % hexagrams.length;
 }
-
-/* =============== 白話 & 主題解說生成 =============== */
+/* =============== 白話 & 主題解說 =============== */
 
 function trendText(trend) {
   switch (trend) {
@@ -191,7 +185,6 @@ function trendText(trend) {
 function topicExplain(hex, topic) {
   const base = hex.shortMeaning;
   const t = hex.trend;
-
   const trendWord =
     t === "大吉"
       ? "偏順"
@@ -310,13 +303,13 @@ function bearMessage(hex, topic, question) {
   }
 }
 
-/* =============== 畫面渲染 =============== */
+/* =============== 畫面渲染（卦象與解說） =============== */
 
 function renderLines(lines) {
   const container = document.getElementById("lines-display");
   container.innerHTML = "";
 
-  const labels = ["上爻", "五爻", "四爻", "三爻", "二爻", "初爻"]; // 由上而下
+  const labels = ["上爻", "五爻", "四爻", "三爻", "二爻", "初爻"];
   for (let i = 5; i >= 0; i--) {
     const row = document.createElement("div");
     row.className = "line-row";
@@ -373,7 +366,7 @@ function renderClassic(hex) {
     "熊熊小補充：\n" + hex.classic.note;
 }
 
-/* =============== 切換白話 / 經典 =============== */
+/* =============== 白話 / 經典切換 =============== */
 
 function setupViewToggle() {
   const btnModern = document.getElementById("view-modern");
@@ -395,52 +388,3 @@ function setupViewToggle() {
     panelModern.classList.add("hidden");
   });
 }
-
-/* =============== DOM Ready =============== */
-
-document.addEventListener("DOMContentLoaded", () => {
-  const castBtn = document.getElementById("cast-btn");
-  const questionInput = document.getElementById("user-question");
-  const topicSelect = document.getElementById("topic");
-  const resultArea = document.getElementById("result-area");
-  const questionDisplay = document.getElementById("question-display");
-  const bearTextEl = document.getElementById("bear-text");
-  const yearSpan = document.getElementById("year");
-
-  if (yearSpan) {
-    yearSpan.textContent = new Date().getFullYear();
-  }
-
-  setupViewToggle();
-
-  castBtn.addEventListener("click", () => {
-    const mode =
-      document.querySelector('input[name="mode"]:checked')?.value || "coin";
-    const topic = topicSelect.value || "overall";
-    const question = questionInput.value || "";
-
-    // 生成六爻
-    const lines = generateSixLines(mode);
-    const idx = linesToIndex(lines);
-    const hex = hexagrams[idx];
-
-    // 顯示問題
-    const q = question.trim();
-    questionDisplay.textContent = q
-      ? `你問的是：\n「${q}」`
-      : "你沒有寫下具體問題，但沒關係，請把這一卦當成生活給你的提醒。";
-
-    // 顯示六爻＆卦象
-    renderLines(lines);
-    renderHexInfo(hex);
-    renderModern(hex, topic);
-    renderClassic(hex);
-
-    // 熊熊提醒
-    bearTextEl.textContent = bearMessage(hex, topic, question);
-
-    // 顯示結果區
-    resultArea.classList.remove("hidden");
-    resultArea.scrollIntoView({ behavior: "smooth" });
-  });
-});
