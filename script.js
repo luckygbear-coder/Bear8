@@ -388,3 +388,216 @@ function setupViewToggle() {
     panelModern.classList.add("hidden");
   });
 }
+/* =============== 占卜日記 (localStorage) =============== */
+
+const DIARY_KEY = "bearIchingDiaryV1";
+
+function loadDiary() {
+  try {
+    const raw = localStorage.getItem(DIARY_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+    return [];
+  } catch (e) {
+    console.error("loadDiary error", e);
+    return [];
+  }
+}
+
+function saveDiary(diary) {
+  try {
+    localStorage.setItem(DIARY_KEY, JSON.stringify(diary));
+  } catch (e) {
+    console.error("saveDiary error", e);
+  }
+}
+
+function addDiaryEntry(mode, topic, question, hex, lines) {
+  const diary = loadDiary();
+
+  const entry = {
+    time: new Date().toISOString(),
+    mode,
+    topic,
+    question: (question || "").trim(),
+    hexId: hex.id,
+    hexName: hex.name,
+    trend: hex.trend,
+    lines: lines.map((v) => (isYang(v) ? 1 : 0)) // 1=陽 0=陰
+  };
+
+  diary.unshift(entry);
+  if (diary.length > 50) diary.length = 50;
+  saveDiary(diary);
+  return diary;
+}
+
+function formatTime(iso) {
+  const d = new Date(iso);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return `${y}/${m}/${day} ${hh}:${mm}`;
+}
+
+function topicLabel(topic) {
+  switch (topic) {
+    case "love":
+      return "感情 / 關係";
+    case "career":
+      return "工作 / 事業";
+    case "wealth":
+      return "財運 / 金錢";
+    case "health":
+      return "健康 / 身心";
+    case "social":
+      return "人際 / 合作";
+    default:
+      return "整體狀況";
+  }
+}
+
+function renderDiaryList(diary) {
+  const listEl = document.getElementById("diary-list");
+  if (!listEl) return;
+
+  listEl.innerHTML = "";
+
+  if (!diary || diary.length === 0) {
+    const empty = document.createElement("div");
+    empty.textContent = "目前還沒有占卜紀錄，先卜一卦看看吧。";
+    empty.style.fontSize = "0.85rem";
+    empty.style.color = "#8a6b7a";
+    listEl.appendChild(empty);
+    return;
+  }
+
+  diary.forEach((entry) => {
+    const entryDiv = document.createElement("div");
+    entryDiv.className = "diary-entry";
+
+    const topRow = document.createElement("div");
+    topRow.className = "diary-entry-top";
+
+    const dateEl = document.createElement("div");
+    dateEl.className = "diary-date";
+    dateEl.textContent = formatTime(entry.time);
+
+    const tagsEl = document.createElement("div");
+    tagsEl.className = "diary-tags";
+
+    const modeTag = document.createElement("span");
+    modeTag.className = "tag mode-tag";
+    modeTag.textContent =
+      entry.mode === "coin" ? "三枚銅錢法" : "快速六爻";
+    tagsEl.appendChild(modeTag);
+
+    const topicTag = document.createElement("span");
+    topicTag.className = "tag topic-tag";
+    topicTag.textContent = topicLabel(entry.topic);
+    tagsEl.appendChild(topicTag);
+
+    const hexTag = document.createElement("span");
+    hexTag.className = "tag hex-tag";
+    hexTag.textContent = `${entry.hexId}. ${entry.hexName}`;
+    tagsEl.appendChild(hexTag);
+
+    topRow.appendChild(dateEl);
+    topRow.appendChild(tagsEl);
+
+    const qEl = document.createElement("div");
+    qEl.className = "diary-question";
+    const qLabel = document.createElement("span");
+    qLabel.className = "diary-label";
+    qLabel.textContent = "Q：";
+    const qText = document.createElement("span");
+    qText.textContent =
+      entry.question || "當時沒有輸入文字，但你有在心裡默念問題。";
+    qEl.appendChild(qLabel);
+    qEl.appendChild(qText);
+
+    const sumEl = document.createElement("div");
+    sumEl.className = "diary-summary";
+    const sLabel = document.createElement("span");
+    sLabel.className = "diary-label";
+    sLabel.textContent = "備註：";
+    const sText = document.createElement("span");
+    sText.textContent = `整體走向：${entry.trend}（可以回到上方找到第 ${entry.hexId} 卦的詳解）`;
+    sumEl.appendChild(sLabel);
+    sumEl.appendChild(sText);
+
+    entryDiv.appendChild(topRow);
+    entryDiv.appendChild(qEl);
+    entryDiv.appendChild(sumEl);
+
+    listEl.appendChild(entryDiv);
+  });
+}
+
+/* =============== DOM Ready =============== */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const castBtn = document.getElementById("cast-btn");
+  const questionInput = document.getElementById("user-question");
+  const topicSelect = document.getElementById("topic");
+  const resultArea = document.getElementById("result-area");
+  const questionDisplay = document.getElementById("question-display");
+  const bearTextEl = document.getElementById("bear-text");
+  const yearSpan = document.getElementById("year");
+  const toggleDiaryBtn = document.getElementById("toggle-diary-btn");
+  const diaryList = document.getElementById("diary-list");
+
+  if (yearSpan) {
+    yearSpan.textContent = new Date().getFullYear();
+  }
+
+  setupViewToggle();
+
+  // 初始載入日記
+  const initialDiary = loadDiary();
+  renderDiaryList(initialDiary);
+
+  if (toggleDiaryBtn && diaryList) {
+    toggleDiaryBtn.addEventListener("click", () => {
+      diaryList.classList.toggle("hidden");
+      toggleDiaryBtn.textContent = diaryList.classList.contains("hidden")
+        ? "顯示日記"
+        : "隱藏日記";
+    });
+  }
+
+  if (castBtn) {
+    castBtn.addEventListener("click", () => {
+      const mode =
+        document.querySelector('input[name="mode"]:checked')?.value || "coin";
+      const topic = topicSelect.value || "overall";
+      const question = questionInput.value || "";
+
+      const lines = generateSixLines(mode);
+      const idx = linesToIndex(lines);
+      const hex = hexagrams[idx];
+
+      const q = question.trim();
+      questionDisplay.textContent = q
+        ? `你問的是：\n「${q}」`
+        : "你沒有寫下具體問題，但沒關係，請把這一卦當成生活給你的提醒。";
+
+      renderLines(lines);
+      renderHexInfo(hex);
+      renderModern(hex, topic);
+      renderClassic(hex);
+
+      bearTextEl.textContent = bearMessage(hex, topic, question);
+
+      // 新增一筆日記
+      const diary = addDiaryEntry(mode, topic, question, hex, lines);
+      renderDiaryList(diary);
+
+      resultArea.classList.remove("hidden");
+      resultArea.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+});
