@@ -1,0 +1,375 @@
+/* 基本設定 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", system-ui,
+    sans-serif;
+  background: radial-gradient(circle at top, #ffece0, #f7d6ff 40%, #f6f0ff 80%);
+  color: #4a2b37;
+}
+
+.page-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.card {
+  background: rgba(255, 247, 236, 0.96);
+  border-radius: 18px;
+  border: 2px solid #e3c28f;
+  box-shadow: 0 4px 12px rgba(112, 72, 46, 0.18);
+  padding: 16px 18px 20px;
+  margin-bottom: 16px;
+}
+
+/* Header */
+.site-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+  color: #996b52;
+}
+
+.about h2,
+.question-area h2,
+.mode-area h2,
+.result-area h2 {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+}
+
+.about p {
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.ig-link a {
+  color: #b55abf;
+  text-decoration: none;
+  font-weight: 600;
+}
+.ig-link a:hover {
+  text-decoration: underline;
+}
+
+/* 問題區 */
+.label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+textarea {
+  width: 100%;
+  min-height: 80px;
+  border-radius: 10px;
+  border: 1.5px solid #d3b28a;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  resize: vertical;
+  outline: none;
+  background: rgba(255, 252, 246, 0.96);
+}
+
+textarea:focus {
+  border-color: #c28ad9;
+  box-shadow: 0 0 0 2px rgba(194, 138, 217, 0.2);
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: #7f6272;
+  line-height: 1.6;
+}
+
+/* 模式 & 主題 */
+.mode-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.mode-item {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.mode-item input {
+  margin-top: 3px;
+}
+
+.topic-select {
+  margin-bottom: 10px;
+}
+.topic-select select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1.5px solid #d3b28a;
+  background: #fffaf4;
+  font-size: 0.95rem;
+}
+
+/* 按鈕 */
+#cast-btn {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #f7a9ff, #ffce7a);
+  color: #4a2b37;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 3px 8px rgba(180, 99, 129, 0.4);
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.12s ease,
+    filter 0.12s ease;
+}
+#cast-btn:hover {
+  filter: brightness(1.05);
+}
+#cast-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(180, 99, 129, 0.35);
+}
+
+/* 結果區 */
+.hidden {
+  display: none;
+}
+
+.result-area {
+  margin-top: 16px;
+}
+
+.question-display {
+  font-size: 0.9rem;
+  color: #7c5868;
+  margin-top: 0;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+/* 六爻顯示 */
+.lines-display {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column-reverse; /* 底爻在最下方 */
+  gap: 4px;
+}
+
+.line-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #8a6b7a;
+}
+
+.line-body {
+  width: 70%;
+  max-width: 320px;
+  height: 10px;
+  border-radius: 999px;
+  background: #f3d4a8;
+  position: relative;
+}
+
+.line-body.line-yang::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: #e79f62;
+}
+
+.line-body.line-yin::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    #e79f62 0,
+    #e79f62 40%,
+    transparent 40%,
+    transparent 60%,
+    #e79f62 60%,
+    #e79f62 100%
+  );
+}
+
+.line-label {
+  min-width: 50px;
+  text-align: right;
+}
+
+/* 卦名區 */
+.hex-basic {
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1.5px solid #e3c28f;
+  background: #fffaf2;
+  margin-bottom: 12px;
+}
+
+.hex-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.hex-meta {
+  font-size: 0.85rem;
+  color: #7c5868;
+}
+
+/* 熊熊對話框 */
+.bear-box {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #fff7ec, #ffeaf6);
+  border-style: dashed;
+  border-color: #e7b7c9;
+  margin-bottom: 12px;
+}
+
+.bear-avatar {
+  font-size: 2.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 3px 4px rgba(145, 89, 100, 0.35));
+}
+
+.bear-content {
+  flex: 1;
+}
+
+.bear-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #a05972;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.bear-title::before {
+  content: "✦";
+  font-size: 0.9rem;
+}
+
+.bear-text {
+  position: relative;
+  display: inline-block;
+  background: #fffdf7;
+  border-radius: 14px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #5a3b4a;
+  box-shadow: 0 2px 5px rgba(147, 104, 116, 0.25);
+}
+.bear-text::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 12px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent #fffdf7 transparent transparent;
+}
+
+/* 切換按鈕 */
+.view-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.view-btn {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #d7b4d5;
+  background: #fff7fb;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.view-btn.active {
+  background: #eec9ff;
+  border-color: #c28ad9;
+  font-weight: 700;
+}
+
+/* 解說區 */
+.view-panel {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.view-title {
+  margin: 4px 0 4px;
+  font-size: 0.95rem;
+  color: #8b5675;
+}
+
+.para {
+  margin-bottom: 6px;
+}
+
+/* 頁尾 */
+.site-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #8a6d75;
+  margin: 16px 0 8px;
+}
+
+/* RWD */
+@media (min-width: 768px) {
+  .page-wrap {
+    padding: 24px;
+  }
+
+  .card {
+    padding: 20px 22px 24px;
+  }
+
+  #cast-btn {
+    max-width: 320px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .bear-avatar {
+    font-size: 2.6rem;
+  }
+}
