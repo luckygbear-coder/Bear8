@@ -571,8 +571,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (castBtn) {
     castBtn.addEventListener("click", () => {
-      const mode =
-        document.querySelector('input[name="mode"]:checked')?.value || "coin";
+const checked = document.querySelector('input[name="mode"]:checked');
+const mode = checked ? checked.value : "coin";
       const topic = topicSelect.value || "overall";
       const question = questionInput.value || "";
 
