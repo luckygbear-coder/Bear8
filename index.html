@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>熊熊易經卜卦 ｜ 64 卦白話占卜</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="page-wrap">
+  <!-- Header -->
+  <header class="site-header card">
+    <h1>🐻 熊熊易經卜卦</h1>
+    <p class="subtitle">三枚銅錢 · 六爻起卦 · 64 卦白話解說＋經典原文</p>
+
+    <section class="about">
+      <h2>關於熊熊占卜</h2>
+      <p>
+        嗨，我是 <strong>村長熊熊</strong>。  
+        這個易經卜卦小工具，希望用溫柔、好懂的方式，陪你一起聽聽「老智慧」怎麼看現在的狀況。
+      </p>
+      <p class="ig-link">
+        📸 IG：<a href="https://www.instagram.com/luckygbear" target="_blank">@luckygbear</a>
+      </p>
+    </section>
+  </header>
+
+  <!-- 問題與設定 -->
+  <main class="card">
+    <section class="question-area">
+      <h2>先想好你想問的事情</h2>
+      <p class="hint">
+        例：<br />
+        「今年適合搬家嗎？」<br />
+        「這段關係我要繼續投入嗎？」<br />
+        「我接下來的工作方向是什麼？」<br />
+      </p>
+
+      <label class="label" for="user-question">（可選）寫下你的問題：</label>
+      <textarea id="user-question" placeholder="寫下問題，可以幫助自己更聚焦。"></textarea>
+    </section>
+
+    <section class="mode-area">
+      <h2>選擇卜卦方式</h2>
+      <div class="mode-options">
+        <label class="mode-item">
+          <input type="radio" name="mode" value="coin" checked />
+          三枚銅錢法（六次擲幣，產生六爻）
+        </label>
+        <label class="mode-item">
+          <input type="radio" name="mode" value="quick" />
+          一鍵快速六爻（系統自動產生）
+        </label>
+      </div>
+
+      <h2>選擇你最在意的主題</h2>
+      <div class="topic-select">
+        <select id="topic">
+          <option value="overall">整體狀況</option>
+          <option value="love">感情 / 關係</option>
+          <option value="career">工作 / 事業</option>
+          <option value="wealth">財運 / 金錢</option>
+          <option value="health">健康 / 身心狀態</option>
+          <option value="social">人際 / 合作</option>
+        </select>
+      </div>
+
+      <button id="cast-btn">✨ 卜卦開始</button>
+    </section>
+  </main>
+
+  <!-- 結果區 -->
+  <section id="result-area" class="result-area card hidden">
+    <h2>卦象結果</h2>
+    <p id="question-display" class="question-display"></p>
+
+    <!-- 六爻顯示 -->
+    <div id="lines-display" class="lines-display"></div>
+
+    <!-- 卦名 -->
+    <div id="hex-basic" class="hex-basic"></div>
+
+    <!-- 熊熊提醒 -->
+    <div id="bear-box" class="card bear-box">
+      <div class="bear-avatar">🐻</div>
+      <div class="bear-content">
+        <div class="bear-title">村長熊熊給你的溫柔提醒</div>
+        <div id="bear-text" class="bear-text"></div>
+      </div>
+    </div>
+
+    <!-- 白話 / 經典切換 -->
+    <div class="view-toggle">
+      <button id="view-modern" class="view-btn active">白話解說</button>
+      <button id="view-classic" class="view-btn">經典原文</button>
+    </div>
+
+    <!-- 白話解說 -->
+    <div id="modern-view" class="view-panel">
+      <h3 class="view-title">🌱 白話解說</h3>
+      <div id="modern-summary" class="para"></div>
+      <div id="modern-topic" class="para"></div>
+      <div id="modern-advice" class="para"></div>
+    </div>
+
+    <!-- 經典原文 -->
+    <div id="classic-view" class="view-panel hidden">
+      <h3 class="view-title">📜 經典原文 & 說明</h3>
+      <div id="classic-gua" class="para"></div>
+      <div id="classic-xiang" class="para"></div>
+      <div id="classic-note" class="para"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    © <span id="year"></span> 熊熊易經卜卦 ｜ 僅供自我覺察參考
+  </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
