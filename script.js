@@ -1440,4 +1440,14 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+  // =============== PWA Service Worker 註冊 ===============
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .catch(function (err) {
+        console.log("Service Worker 註冊失敗：", err);
+      });
+  });
+}
 });
