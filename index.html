@@ -8,25 +8,15 @@
   <!-- PWA 相關設定 -->
   <meta name="theme-color" content="#f8df9e" />
   <link rel="manifest" href="manifest.json" />
+
   <!-- App / PWA icon（iOS & 一般瀏覽器） -->
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
 
-  <!-- 你的樣式 -->
+  <!-- 樣式 -->
   <link rel="stylesheet" href="style.css" />
 </head>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker
-        .register('sw.js')
-        .catch(function (err) {
-          console.log('SW 註冊失敗：', err);
-        });
-    });
-  }
-</script>
 <body>
 <div class="page-wrap">
   <!-- Header -->
@@ -150,7 +140,7 @@
   </footer>
 </div>
 
-<!-- 你的主程式 -->
+<!-- 主程式 -->
 <script src="script.js"></script>
 
 <!-- Service Worker 註冊（PWA 必須） -->
