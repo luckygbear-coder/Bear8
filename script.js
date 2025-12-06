@@ -1,7 +1,6 @@
-/* =============== 易經 64 卦資料（簡版） =============== */
+/* =============== 易經 64 卦資料（完整＋白話版） =============== */
 /*
   index(0-63) 對應六爻：底爻為 bit0，六爻為 bit5，1=陽，0=陰
-  這裡用簡單順序，主要是讓同一組爻象會對應同一筆解說資料。
 */
 
 const hexagrams = [];
@@ -21,27 +20,8 @@ function createHex(id, name, pinyin, shortMeaning, trend, classicGua, classicXia
     }
   };
 }
-// 🌱 白話版顯示（主題＋五大面向小提醒）
-function renderModern(hex, topic) {
-  var summaryEl = document.getElementById("modern-summary");
-  var topicEl = document.getElementById("modern-topic");
-  var adviceEl = document.getElementById("modern-advice");
-  if (!summaryEl || !topicEl || !adviceEl) return;
 
-  // 總體卦意
-  summaryEl.textContent =
-    "總體卦意：\n" + hex.shortMeaning + " " + trendText(hex.trend);
-
-  // 你在選單選的主題（感情／工作…）
-  topicEl.textContent = topicExplain(hex, topic);
-
-  // 行動建議＋其他面向小提醒
-  var txt = adviceText(hex, topic);
-  txt += "\n\n🔍 其他面向小提醒：\n" + multiTopicAnalysis(hex);
-
-  adviceEl.textContent = txt;
-}
-/* ===== 批次新增：第 1〜8 卦 ===== */
+/* ===== 第 1〜8 卦 ===== */
 
 hexagrams[0] = createHex(
   1,
@@ -130,7 +110,8 @@ hexagrams[7] = createHex(
   "象曰：地上有水，比。先王以建萬國，親諸侯。",
   "比卦提醒：人際的距離感很重要。保持真誠，但也看清對方的真心。"
 );
-/* ===== 批次新增：第 9〜16 卦 ===== */
+
+/* ===== 第 9〜16 卦 ===== */
 
 hexagrams[8] = createHex(
   9,
@@ -219,7 +200,8 @@ hexagrams[15] = createHex(
   "象曰：雷出地奮，豫。君子以先民用。",
   "豫卦是「帶著快樂去行動」。相信自己的直覺，行動會有好結果。"
 );
-/* ===== 批次新增：第 17〜24 卦 ===== */
+
+/* ===== 第 17〜24 卦 ===== */
 
 hexagrams[16] = createHex(
   17,
@@ -308,7 +290,8 @@ hexagrams[23] = createHex(
   "象曰：雷在地中，復。先王以至日閉關，商旅不行。",
   "復卦象徵「重新找回初心」。現在非常適合重新出發。"
 );
-/* ===== 批次新增：第 25〜32 卦 ===== */
+
+/* ===== 第 25〜32 卦 ===== */
 
 hexagrams[24] = createHex(
   25,
@@ -397,7 +380,8 @@ hexagrams[31] = createHex(
   "象曰：雷風，恆。君子以立不易方。",
   "恆卦在說：「慢慢來，但不要停。」不求一次到位，而是一步一步堅持，就會累積成長久的好結果。"
 );
-/* ===== 批次新增：第 33〜64 卦 ===== */
+
+/* ===== 第 33〜64 卦 ===== */
 
 hexagrams[32] = createHex(
   33,
@@ -751,25 +735,9 @@ hexagrams[63] = createHex(
   "未濟卦說：現在不適合急著結束。再檢查一次、再穩一下，就是成功。"
 );
 
-// 其餘先塞 placeholder，避免出錯
-for (let i = 8; i < 64; i++) {
-  hexagrams[i] =
-    hexagrams[i] ||
-    createHex(
-      i + 1,
-      `第 ${i + 1} 卦（待補）`,
-      "",
-      "這一卦的詳細解說還在持續整理中，現在先把它當作一個「提醒自己慢慢觀察現況」的訊號。",
-      "平",
-      "卦辭原文整理中。",
-      "象曰：象意整理中。",
-      "之後可以請村長熊熊幫你把這一卦專門寫成完整白話解說。"
-    );
-}
-
 /* =============== 卦象生成 =============== */
 
-// 一爻：6~9（模擬三枚銅錢的結果）
+// 一爻：6~9（模擬三枚銅錢）
 function randomLine() {
   const val = 6 + Math.floor(Math.random() * 4); // 6,7,8,9
   return val;
@@ -805,6 +773,7 @@ function linesToIndex(lines) {
   }
   return idx % hexagrams.length;
 }
+
 // 判斷是否有動爻（6 或 9）
 function hasMovingLine(lines) {
   for (var i = 0; i < lines.length; i++) {
@@ -818,7 +787,7 @@ function getChangedLines(lines) {
   var newLines = [];
   for (var i = 0; i < lines.length; i++) {
     var v = lines[i];
-    var moving = (v === 6 || v === 9);
+    var moving = v === 6 || v === 9;
     var yang = isYang(v);
     if (!moving) {
       newLines.push(v);
@@ -840,6 +809,7 @@ function computeDerivedHex(lines) {
     hex: hexagrams[idx]
   };
 }
+
 /* =============== 白話 & 主題解說 =============== */
 
 function trendText(trend) {
@@ -893,19 +863,19 @@ function topicExplain(hex, topic) {
     case "health":
       return (
         "🌿 健康 / 身心：\n" +
-        `${base}` +
+        base +
         " 從易經的角度來看，身心的節奏要配合自然：過度用力或過度放任都不適合，適時休息與調整生活作息很重要。"
       );
     case "social":
       return (
         "🤝 人際 / 合作：\n" +
-        `${base}` +
+        base +
         " 在相處上，多一點耐心與換位思考，會比急著爭辯誰對誰錯更有幫助。"
       );
     default:
       return (
         "📌 整體狀況：\n" +
-        `${base}` +
+        base +
         " 現在最重要的，是看見自己在這件事中的角色，並為自己的選擇負起溫柔的責任。"
       );
   }
@@ -921,7 +891,8 @@ function adviceText(hex, topic) {
   } else if (t === "挑戰") {
     core = "先穩住情緒，再處理問題。與其硬碰硬，不如調整策略與界線。";
   } else if (t === "提醒") {
-    core = "把現在的卡關當成「練習調整步伐」的機會，先整理好自己再決定要不要往前。";
+    core =
+      "把現在的卡關當成「練習調整步伐」的機會，先整理好自己再決定要不要往前。";
   } else {
     core = "多留意細節，凡事先想一步，再行動一步。";
   }
@@ -941,6 +912,7 @@ function adviceText(hex, topic) {
 
   return "✅ 行動建議：\n" + core + " " + topicTail;
 }
+
 function multiTopicAnalysis(hex) {
   var t = hex.trend;
   var base = hex.shortMeaning;
@@ -965,28 +937,40 @@ function multiTopicAnalysis(hex) {
     toneGood;
 
   var wealth =
-    "💰 財運：先顧好基本生活與安全感，再來談投資與冒險。 " +
-    "避免因為情緒做決定。";
+    "💰 財運：先顧好基本生活與安全感，再來談投資與冒險。 避免因為情緒做決定。";
 
   var health =
-    "🌿 健康：身心狀態很關鍵，睡眠與飲食是根本。 " +
-    "感到壓力時，允許自己休息，不是偷懶。";
+    "🌿 健康：身心狀態很關鍵，睡眠與飲食是根本。 感到壓力時，允許自己休息，不是偷懶。";
 
   var social =
     "🤝 人際：選擇讓你自在的圈子，也練習成為別人的「安全感來源」。";
 
   return (
-    love +
-    "\n" +
-    career +
-    "\n" +
-    wealth +
-    "\n" +
-    health +
-    "\n" +
-    social
+    love + "\n" + career + "\n" + wealth + "\n" + health + "\n" + social
   );
 }
+
+// 🌱 白話版顯示（主題＋五大面向小提醒）
+function renderModern(hex, topic) {
+  var summaryEl = document.getElementById("modern-summary");
+  var topicEl = document.getElementById("modern-topic");
+  var adviceEl = document.getElementById("modern-advice");
+  if (!summaryEl || !topicEl || !adviceEl) return;
+
+  // 總體卦意
+  summaryEl.textContent =
+    "總體卦意：\n" + hex.shortMeaning + " " + trendText(hex.trend);
+
+  // 你在選單選的主題（感情／工作…）
+  topicEl.textContent = topicExplain(hex, topic);
+
+  // 行動建議＋其他面向小提醒
+  var txt = adviceText(hex, topic);
+  txt += "\n\n🔍 其他面向小提醒：\n" + multiTopicAnalysis(hex);
+
+  adviceEl.textContent = txt;
+}
+
 /* =============== 熊熊提醒 =============== */
 
 function bearMessage(hex, topic, question) {
@@ -1027,6 +1011,8 @@ function bearMessage(hex, topic, question) {
 
 function renderLines(lines) {
   var container = document.getElementById("lines-display");
+  if (!container) return;
+
   container.innerHTML = "";
 
   var labels = ["上爻", "五爻", "四爻", "三爻", "二爻", "初爻"];
@@ -1035,14 +1021,12 @@ function renderLines(lines) {
     row.className = "line-row";
 
     var v = lines[i];
-    var moving = (v === 6 || v === 9);
+    var moving = v === 6 || v === 9;
 
     var body = document.createElement("div");
     var cls = "line-body ";
     cls += isYang(v) ? "line-yang" : "line-yin";
-    if (moving) {
-      cls += " line-moving";
-    }
+    if (moving) cls += " line-moving";
     body.className = cls;
 
     var label = document.createElement("div");
@@ -1057,6 +1041,7 @@ function renderLines(lines) {
 
 function renderHexInfo(hex, derivedHex) {
   var basic = document.getElementById("hex-basic");
+  if (!basic) return;
   basic.innerHTML = "";
 
   // 本卦
@@ -1101,12 +1086,14 @@ function renderHexInfo(hex, derivedHex) {
 }
 
 function renderClassic(hex) {
-  document.getElementById("classic-gua").textContent =
-    "卦辭：\n" + hex.classic.gua;
-  document.getElementById("classic-xiang").textContent =
-    "象傳：\n" + hex.classic.xiang;
-  document.getElementById("classic-note").textContent =
-    "熊熊小補充：\n" + hex.classic.note;
+  var g = document.getElementById("classic-gua");
+  var x = document.getElementById("classic-xiang");
+  var n = document.getElementById("classic-note");
+  if (!g || !x || !n) return;
+
+  g.textContent = "卦辭：\n" + hex.classic.gua;
+  x.textContent = "象傳：\n" + hex.classic.xiang;
+  n.textContent = "熊熊小補充：\n" + hex.classic.note;
 }
 
 /* =============== 白話 / 經典切換 =============== */
@@ -1116,6 +1103,8 @@ function setupViewToggle() {
   const btnClassic = document.getElementById("view-classic");
   const panelModern = document.getElementById("modern-view");
   const panelClassic = document.getElementById("classic-view");
+
+  if (!btnModern || !btnClassic || !panelModern || !panelClassic) return;
 
   btnModern.addEventListener("click", () => {
     btnModern.classList.add("active");
@@ -1131,6 +1120,7 @@ function setupViewToggle() {
     panelModern.classList.add("hidden");
   });
 }
+
 /* =============== 占卜日記 (localStorage) =============== */
 
 const DIARY_KEY = "bearIchingDiaryV1";
@@ -1279,12 +1269,13 @@ function renderDiaryList(diary) {
     listEl.appendChild(entryDiv);
   });
 }
+
 /* =============== 銅錢動畫（卜卦時顯示） =============== */
 
 var coinAnimEl = null;
 
 function initCoinAnimation() {
-  // 動態插入一小段樣式，避免你改 CSS
+  // 動態插入一小段樣式
   var style = document.createElement("style");
   style.textContent =
     "#coin-anim{position:fixed;left:0;right:0;top:0;bottom:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:9999;}" +
@@ -1318,12 +1309,13 @@ function playCoinAnimation(callback) {
   // 顯示動畫遮罩
   coinAnimEl.style.display = "flex";
 
-  // 停留久一點，讓你看得清楚（約 1.3 秒）
+  // 停留約 1.3 秒後關閉並執行卜卦
   setTimeout(function () {
     coinAnimEl.style.display = "none";
     if (callback) callback();
   }, 1300);
 }
+
 /* =============== DOM Ready =============== */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -1383,8 +1375,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var diary = addDiaryEntry(mode, topic, question, hex, lines);
     renderDiaryList(diary);
 
-    resultArea.classList.remove("hidden");
-    resultArea.scrollIntoView({ behavior: "smooth" });
+    if (resultArea) {
+      resultArea.classList.remove("hidden");
+      resultArea.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   if (castBtn) {
