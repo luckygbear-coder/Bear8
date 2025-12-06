@@ -1201,32 +1201,6 @@ function topicLabel(topic) {
  * diary: 陣列
  * onClickEntry: (entry) => {}  點擊某筆日記時要做的事
  */
-entryDiv.addEventListener("click", () => {
-  // 1. 高亮當前選取
-  document.querySelectorAll(".diary-entry").forEach(el => {
-    el.classList.remove("active");
-  });
-  entryDiv.classList.add("active");
-
-  // 2. 取出本卦資料
-  const hex = hexagrams[entry.hexId - 1];
-
-  // 3. 顯示卦象 + 解說
-  questionDisplay.textContent = entry.question
-    ? "你問的是：\n「" + entry.question + "」"
-    : "你當時沒有輸入問題，但你有在心裡默念。";
-
-  renderLines(entry.lines.map(v => (v === 1 ? 7 : 8)));  // 1=陽 0=陰
-  renderHexInfo(hex, null);
-  renderModern(hex, entry.topic);
-  renderClassic(hex);
-
-  bearTextEl.textContent = bearMessage(hex, entry.topic, entry.question);
-
-  // 4. 滑動到上方顯示區
-  resultArea.classList.remove("hidden");
-  resultArea.scrollIntoView({ behavior: "smooth" });
-});
 function renderDiaryList(diary, onClickEntry) {
   const listEl = document.getElementById("diary-list");
   if (!listEl) return;
