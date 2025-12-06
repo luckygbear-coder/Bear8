@@ -512,3 +512,9 @@ textarea:focus {
     max-height: 320px;
   }
 }
+/* === 占卜日記高亮效果 === */
+.diary-entry.active {
+  border: 2px solid #d39dbf;  /* 柔和粉紫色外框 */
+  background: #fff9fc;        /* 輕微粉色底 */
+  box-shadow: 0 0 6px rgba(210, 150, 200, 0.4);
+}
