@@ -1260,82 +1260,127 @@ function renderDiaryList(diary) {
     listEl.appendChild(entryDiv);
   });
 }
+/* =============== 銅錢動畫（卜卦時顯示） =============== */
 
+var coinAnimEl = null;
+
+function initCoinAnimation() {
+  // 動態插入一小段樣式，避免你改 CSS
+  var style = document.createElement("style");
+  style.textContent =
+    "#coin-anim{position:fixed;left:0;right:0;top:0;bottom:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);z-index:9999;}" +
+    "#coin-anim-inner{background:#fff7e6;border-radius:16px;padding:16px 20px;box-shadow:0 4px 12px rgba(0,0,0,0.25);text-align:center;max-width:260px;margin:0 auto;font-size:0.9rem;}" +
+    ".coin-row{font-size:2rem;margin-bottom:8px;}" +
+    ".coin-anim-coin{display:inline-block;animation:coin-bounce 0.6s ease-in-out infinite alternate;}" +
+    ".coin-anim-coin:nth-child(2){animation-delay:0.15s;}" +
+    ".coin-anim-coin:nth-child(3){animation-delay:0.3s;}" +
+    "@keyframes coin-bounce{0%{transform:translateY(0);}100%{transform:translateY(-8px);}}";
+  document.head.appendChild(style);
+
+  coinAnimEl = document.createElement("div");
+  coinAnimEl.id = "coin-anim";
+  coinAnimEl.innerHTML =
+    '<div id="coin-anim-inner">' +
+    '<div class="coin-row">' +
+    '<span class="coin-anim-coin">🪙</span>' +
+    '<span class="coin-anim-coin">🪙</span>' +
+    '<span class="coin-anim-coin">🪙</span>' +
+    "</div>" +
+    '<div>村長熊熊正在幫你擲銅錢…</div>' +
+    "</div>";
+  document.body.appendChild(coinAnimEl);
+}
+
+function playCoinAnimation(callback) {
+  if (!coinAnimEl) {
+    if (callback) callback();
+    return;
+  }
+  coinAnimEl.style.display = "flex";
+  setTimeout(function () {
+    coinAnimEl.style.display = "none";
+    if (callback) callback();
+  }, 900); // 約 0.9 秒
+}
 /* =============== DOM Ready =============== */
 
-document.addEventListener("DOMContentLoaded", () => {
-  const castBtn = document.getElementById("cast-btn");
-  const questionInput = document.getElementById("user-question");
-  const topicSelect = document.getElementById("topic");
-  const resultArea = document.getElementById("result-area");
-  const questionDisplay = document.getElementById("question-display");
-  const bearTextEl = document.getElementById("bear-text");
-  const yearSpan = document.getElementById("year");
-  const toggleDiaryBtn = document.getElementById("toggle-diary-btn");
-  const diaryList = document.getElementById("diary-list");
+document.addEventListener("DOMContentLoaded", function () {
+  var castBtn = document.getElementById("cast-btn");
+  var questionInput = document.getElementById("user-question");
+  var topicSelect = document.getElementById("topic");
+  var resultArea = document.getElementById("result-area");
+  var questionDisplay = document.getElementById("question-display");
+  var bearTextEl = document.getElementById("bear-text");
+  var yearSpan = document.getElementById("year");
+  var toggleDiaryBtn = document.getElementById("toggle-diary-btn");
+  var diaryList = document.getElementById("diary-list");
 
   if (yearSpan) {
     yearSpan.textContent = new Date().getFullYear();
   }
 
   setupViewToggle();
+  initCoinAnimation(); // 啟動銅錢動畫
 
   // 初始載入日記
-  const initialDiary = loadDiary();
+  var initialDiary = loadDiary();
   renderDiaryList(initialDiary);
 
   if (toggleDiaryBtn && diaryList) {
-    toggleDiaryBtn.addEventListener("click", () => {
-      diaryList.classList.toggle("hidden");
-      toggleDiaryBtn.textContent = diaryList.classList.contains("hidden")
-        ? "顯示日記"
-        : "隱藏日記";
+    toggleDiaryBtn.addEventListener("click", function () {
+      if (diaryList.classList.contains("hidden")) {
+        diaryList.classList.remove("hidden");
+        toggleDiaryBtn.textContent = "隱藏日記";
+      } else {
+        diaryList.classList.add("hidden");
+        toggleDiaryBtn.textContent = "顯示日記";
+      }
     });
   }
 
+  // 真正執行卜卦的函式（本卦＋之卦＋寫日記）
+  function performDivination(mode, topic, question) {
+    var lines = generateSixLines(mode);
+    var derived = computeDerivedHex(lines); // 之卦
+    var idx = linesToIndex(lines);
+    var hex = hexagrams[idx];
+
+    var q = (question || "").trim();
+    questionDisplay.textContent = q
+      ? "你問的是：\n「" + q + "」"
+      : "你沒有寫下具體問題，但沒關係，請把這一卦當成生活給你的提醒。";
+
+    renderLines(lines);
+    renderHexInfo(hex, derived); // 傳入本卦＋之卦
+    renderModern(hex, topic);
+    renderClassic(hex);
+
+    bearTextEl.textContent = bearMessage(hex, topic, question);
+
+    // 新增一筆日記（目前只記錄本卦）
+    var diary = addDiaryEntry(mode, topic, question, hex, lines);
+    renderDiaryList(diary);
+
+    resultArea.classList.remove("hidden");
+    resultArea.scrollIntoView({ behavior: "smooth" });
+  }
+
   if (castBtn) {
-    castBtn.addEventListener("click", () => {
-const checked = document.querySelector('input[name="mode"]:checked');
-const mode = checked ? checked.value : "coin";
-      const topic = topicSelect.value || "overall";
-      const question = questionInput.value || "";
+    castBtn.addEventListener("click", function () {
+      var checked = document.querySelector('input[name="mode"]:checked');
+      var mode = checked ? checked.value : "coin";
+      var topic = topicSelect ? topicSelect.value || "overall" : "overall";
+      var question = questionInput ? questionInput.value || "" : "";
 
-      const lines = generateSixLines(mode);
-      const idx = linesToIndex(lines);
-      const hex = hexagrams[idx];
-
-      const q = question.trim();
-      questionDisplay.textContent = q
-        ? `你問的是：\n「${q}」`
-        : "你沒有寫下具體問題，但沒關係，請把這一卦當成生活給你的提醒。";
-
-      renderLines(lines);
-      renderHexInfo(hex);
-function renderModern(hex, topic) {
-  var summaryEl = document.getElementById("modern-summary");
-  var topicEl = document.getElementById("modern-topic");
-  var adviceEl = document.getElementById("modern-advice");
-  if (!summaryEl || !topicEl || !adviceEl) return;
-
-  summaryEl.textContent =
-    "總體卦意：\n" + hex.shortMeaning + " " + trendText(hex.trend);
-
-  topicEl.textContent = topicExplain(hex, topic);
-
-  var txt = adviceText(hex, topic);
-  txt += "\n\n🔍 其他面向小提醒：\n" + multiTopicAnalysis(hex);
-
-  adviceEl.textContent = txt;
-}      renderClassic(hex);
-
-      bearTextEl.textContent = bearMessage(hex, topic, question);
-
-      // 新增一筆日記
-      const diary = addDiaryEntry(mode, topic, question, hex, lines);
-      renderDiaryList(diary);
-
-      resultArea.classList.remove("hidden");
-      resultArea.scrollIntoView({ behavior: "smooth" });
+      if (mode === "coin") {
+        // 三枚銅錢法：先播放動畫，再卜卦
+        playCoinAnimation(function () {
+          performDivination(mode, topic, question);
+        });
+      } else {
+        // 快速六爻：直接卜卦
+        performDivination(mode, topic, question);
+      }
     });
   }
 });
