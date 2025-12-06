@@ -1,7 +1,7 @@
 {
   "name": "熊熊易經卜卦",
   "short_name": "熊熊卜卦",
-  "start_url": "/index.html",
+  "start_url": "/bear8/index.html",
   "display": "standalone",
   "background_color": "#ffeec9",
   "theme_color": "#ffeec9",
