@@ -1,10 +1,11 @@
 {
-  "name": "熊熊易經卜卦",
+  "name": "熊熊卜卦",
   "short_name": "熊熊卜卦",
-  "start_url": "/bear8/index.html",
+  "start_url": "/Bear8/index.html",
+  "scope": "/Bear8/",
   "display": "standalone",
-  "background_color": "#ffeec9",
-  "theme_color": "#ffeec9",
+  "background_color": "#fff7e6",
+  "theme_color": "#f4c37d",
   "icons": [
     {
       "src": "icons/icon-192.png",
