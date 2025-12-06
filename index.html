@@ -5,29 +5,15 @@
   <title>熊熊易經卜卦 ｜ 64 卦白話占卜</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="style.css" />
-
+  <!-- PWA 相關設定 -->
+  <meta name="theme-color" content="#f8df9e" />
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#f8bfbf" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="熊熊卜卦" />
+  <!-- App / PWA icon（iOS & 一般瀏覽器） -->
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
-</head>
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
 
-  <!-- PWA 外觀顏色 -->
-  <meta name="theme-color" content="#ffeec9" />
-
-  <!-- iOS PWA 設定 -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="熊熊卜卦" />
-  <!-- iOS 桌面 icon（先用 192px，那張 icon-192.png） -->
-  <link rel="apple-touch-icon" href="icons/icon-192.png" />
-
-  <!-- PWA manifest -->
-  <link rel="manifest" href="manifest.json" />
-
+  <!-- 你的樣式 -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -153,11 +139,20 @@
   </footer>
 </div>
 
+<!-- 你的主程式 -->
 <script src="script.js"></script>
+
+<!-- Service Worker 註冊（PWA 必須） -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker
+        .register('sw.js')
+        .catch(function (err) {
+          console.log('Service Worker 註冊失敗：', err);
+        });
+    });
+  }
+</script>
 </body>
 </html>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("/sw.js");
-  });
-}
