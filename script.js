@@ -786,6 +786,41 @@ function linesToIndex(lines) {
   }
   return idx % hexagrams.length;
 }
+// 判斷是否有動爻（6 或 9）
+function hasMovingLine(lines) {
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i] === 6 || lines[i] === 9) return true;
+  }
+  return false;
+}
+
+// 依動爻產生「之卦」用的六爻（把動爻反轉）
+function getChangedLines(lines) {
+  var newLines = [];
+  for (var i = 0; i < lines.length; i++) {
+    var v = lines[i];
+    var moving = (v === 6 || v === 9);
+    var yang = isYang(v);
+    if (!moving) {
+      newLines.push(v);
+    } else {
+      // 陽變陰、陰變陽
+      newLines.push(yang ? 8 : 7);
+    }
+  }
+  return newLines;
+}
+
+// 回傳之卦資料（沒有動爻則回傳 null）
+function computeDerivedHex(lines) {
+  if (!hasMovingLine(lines)) return null;
+  var changedLines = getChangedLines(lines);
+  var idx = linesToIndex(changedLines);
+  return {
+    lines: changedLines,
+    hex: hexagrams[idx]
+  };
+}
 /* =============== 白話 & 主題解說 =============== */
 
 function trendText(trend) {
@@ -887,7 +922,52 @@ function adviceText(hex, topic) {
 
   return "✅ 行動建議：\n" + core + " " + topicTail;
 }
+function multiTopicAnalysis(hex) {
+  var t = hex.trend;
+  var base = hex.shortMeaning;
 
+  var toneGood =
+    t === "大吉"
+      ? "整體偏順、貴人感強。"
+      : t === "小吉"
+      ? "整體偏穩，只要照步驟做就好。"
+      : t === "挑戰"
+      ? "會有壓力，但也帶來成長。"
+      : t === "提醒"
+      ? "比較像是「先調整自己」的階段。"
+      : "屬於中性狀態，關鍵在你的選擇。";
+
+  var love =
+    "💗 感情：多留意溝通方式，不是對錯，而是彼此能不能被理解。 " +
+    base;
+
+  var career =
+    "💼 工作：把大目標拆小步驟，現在最重要的是穩定輸出。 " +
+    toneGood;
+
+  var wealth =
+    "💰 財運：先顧好基本生活與安全感，再來談投資與冒險。 " +
+    "避免因為情緒做決定。";
+
+  var health =
+    "🌿 健康：身心狀態很關鍵，睡眠與飲食是根本。 " +
+    "感到壓力時，允許自己休息，不是偷懶。";
+
+  var social =
+    "🤝 人際：選擇讓你自在的圈子，也練習成為別人的「安全感來源」。";
+
+  return (
+    love +
+    "\n" +
+    career +
+    "\n" +
+    wealth +
+    "\n" +
+    health +
+    "\n" +
+    social
+  );
+}
 /* =============== 熊熊提醒 =============== */
 
 function bearMessage(hex, topic, question) {
@@ -927,19 +1007,26 @@ function bearMessage(hex, topic, question) {
 /* =============== 畫面渲染（卦象與解說） =============== */
 
 function renderLines(lines) {
-  const container = document.getElementById("lines-display");
+  var container = document.getElementById("lines-display");
   container.innerHTML = "";
 
-  const labels = ["上爻", "五爻", "四爻", "三爻", "二爻", "初爻"];
-  for (let i = 5; i >= 0; i--) {
-    const row = document.createElement("div");
+  var labels = ["上爻", "五爻", "四爻", "三爻", "二爻", "初爻"];
+  for (var i = 5; i >= 0; i--) {
+    var row = document.createElement("div");
     row.className = "line-row";
 
-    const body = document.createElement("div");
-    body.className =
-      "line-body " + (isYang(lines[i]) ? "line-yang" : "line-yin");
+    var v = lines[i];
+    var moving = (v === 6 || v === 9);
 
-    const label = document.createElement("div");
+    var body = document.createElement("div");
+    var cls = "line-body ";
+    cls += isYang(v) ? "line-yang" : "line-yin";
+    if (moving) {
+      cls += " line-moving";
+    }
+    body.className = cls;
+
+    var label = document.createElement("div");
     label.className = "line-label";
     label.textContent = labels[5 - i];
 
@@ -949,33 +1036,49 @@ function renderLines(lines) {
   }
 }
 
-function renderHexInfo(hex) {
-  const basic = document.getElementById("hex-basic");
+function renderHexInfo(hex, derivedHex) {
+  var basic = document.getElementById("hex-basic");
   basic.innerHTML = "";
 
-  const nameEl = document.createElement("div");
+  // 本卦
+  var nameEl = document.createElement("div");
   nameEl.className = "hex-name";
-  nameEl.textContent = `${hex.id}. ${hex.name}`;
+  nameEl.textContent = "本卦：" + hex.id + ". " + hex.name;
 
-  const metaEl = document.createElement("div");
+  var metaEl = document.createElement("div");
   metaEl.className = "hex-meta";
-  metaEl.textContent = `卦意關鍵：${hex.shortMeaning} （整體走向：${hex.trend}）`;
+  metaEl.textContent =
+    "卦意關鍵：" + hex.shortMeaning + " （整體走向：" + hex.trend + "）";
 
   basic.appendChild(nameEl);
   basic.appendChild(metaEl);
-}
 
-function renderModern(hex, topic) {
-  document.getElementById("modern-summary").textContent =
-    "總體卦意：\n" + hex.shortMeaning + " " + trendText(hex.trend);
-  document.getElementById("modern-topic").textContent = topicExplain(
-    hex,
-    topic
-  );
-  document.getElementById("modern-advice").textContent = adviceText(
-    hex,
-    topic
-  );
+  // 之卦（如果有動爻）
+  if (derivedHex && derivedHex.hex) {
+    var d = derivedHex.hex;
+
+    var subTitle = document.createElement("div");
+    subTitle.className = "hex-sub-title";
+    subTitle.textContent = "之卦（動爻變化後的走向）：";
+
+    var dName = document.createElement("div");
+    dName.className = "hex-sub-name";
+    dName.textContent = d.id + ". " + d.name;
+
+    var dMeta = document.createElement("div");
+    dMeta.className = "hex-sub-meta";
+    dMeta.textContent =
+      "補充卦意：" + d.shortMeaning + " （走向：" + d.trend + "）";
+
+    basic.appendChild(subTitle);
+    basic.appendChild(dName);
+    basic.appendChild(dMeta);
+  } else {
+    var noChange = document.createElement("div");
+    noChange.className = "hex-sub-meta";
+    noChange.textContent = "本次沒有動爻，本卦就是主要的參考方向。";
+    basic.appendChild(noChange);
+  }
 }
 
 function renderClassic(hex) {
@@ -1208,8 +1311,22 @@ const mode = checked ? checked.value : "coin";
 
       renderLines(lines);
       renderHexInfo(hex);
-      renderModern(hex, topic);
-      renderClassic(hex);
+function renderModern(hex, topic) {
+  var summaryEl = document.getElementById("modern-summary");
+  var topicEl = document.getElementById("modern-topic");
+  var adviceEl = document.getElementById("modern-advice");
+  if (!summaryEl || !topicEl || !adviceEl) return;
+
+  summaryEl.textContent =
+    "總體卦意：\n" + hex.shortMeaning + " " + trendText(hex.trend);
+
+  topicEl.textContent = topicExplain(hex, topic);
+
+  var txt = adviceText(hex, topic);
+  txt += "\n\n🔍 其他面向小提醒：\n" + multiTopicAnalysis(hex);
+
+  adviceEl.textContent = txt;
+}      renderClassic(hex);
 
       bearTextEl.textContent = bearMessage(hex, topic, question);
 
