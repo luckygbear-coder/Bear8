@@ -1,21 +1,26 @@
 {
-  "name": "熊熊卜卦",
+  "name": "熊熊易經卜卦",
   "short_name": "熊熊卜卦",
-  "start_url": "/Bear8/index.html",
-  "scope": "/Bear8/",
+  "description": "三枚銅錢 · 六爻起卦 · 64 卦白話解說＋村長熊熊溫柔提醒。",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#fff7e6",
-  "theme_color": "#f4c37d",
+  "orientation": "portrait",
+  "background_color": "#ffeec9",
+  "theme_color": "#f8bfbf",
   "icons": [
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
