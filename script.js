@@ -21,7 +21,26 @@ function createHex(id, name, pinyin, shortMeaning, trend, classicGua, classicXia
     }
   };
 }
+// 🌱 白話版顯示（主題＋五大面向小提醒）
+function renderModern(hex, topic) {
+  var summaryEl = document.getElementById("modern-summary");
+  var topicEl = document.getElementById("modern-topic");
+  var adviceEl = document.getElementById("modern-advice");
+  if (!summaryEl || !topicEl || !adviceEl) return;
 
+  // 總體卦意
+  summaryEl.textContent =
+    "總體卦意：\n" + hex.shortMeaning + " " + trendText(hex.trend);
+
+  // 你在選單選的主題（感情／工作…）
+  topicEl.textContent = topicExplain(hex, topic);
+
+  // 行動建議＋其他面向小提醒
+  var txt = adviceText(hex, topic);
+  txt += "\n\n🔍 其他面向小提醒：\n" + multiTopicAnalysis(hex);
+
+  adviceEl.textContent = txt;
+}
 /* ===== 批次新增：第 1〜8 卦 ===== */
 
 hexagrams[0] = createHex(
@@ -1296,11 +1315,14 @@ function playCoinAnimation(callback) {
     if (callback) callback();
     return;
   }
+  // 顯示動畫遮罩
   coinAnimEl.style.display = "flex";
+
+  // 停留久一點，讓你看得清楚（約 1.3 秒）
   setTimeout(function () {
     coinAnimEl.style.display = "none";
     if (callback) callback();
-  }, 900); // 約 0.9 秒
+  }, 1300);
 }
 /* =============== DOM Ready =============== */
 
