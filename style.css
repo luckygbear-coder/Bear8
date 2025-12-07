@@ -13,6 +13,28 @@ body {
   background: radial-gradient(circle at top, #ffece0, #f7d6ff 40%, #f6f0ff 80%);
   color: #4a2b37;
 }
+.back-home-btn {
+  display: block;
+  text-align: center;
+  margin: 20px auto 10px;
+  padding: 10px 14px;
+  width: fit-content;
+
+  background: #fff7e6;
+  border: 2px solid #f3d5a3;
+  border-radius: 999px;
+  color: #7a4b4b;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: all 0.15s ease;
+}
+
+.back-home-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+}
 
 .page-wrap {
   max-width: 720px;
