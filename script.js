@@ -20,7 +20,58 @@ function createHex(id, name, pinyin, shortMeaning, trend, classicGua, classicXia
     }
   };
 }
+// ===============================
+// 🐻 共用的熊熊冒險日記（跟主站同一個 key）
+// ===============================
+const ADVENTURE_DIARY_KEY = "bearAdventureDiaryV1";
 
+function loadAdventureDiary() {
+  try {
+    const raw = localStorage.getItem(ADVENTURE_DIARY_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn("讀取冒險日記失敗", e);
+    return [];
+  }
+}
+
+function saveAdventureDiary(list) {
+  try {
+    localStorage.setItem(ADVENTURE_DIARY_KEY, JSON.stringify(list));
+  } catch (e) {
+    console.warn("儲存冒險日記失敗", e);
+  }
+}
+
+function appendIchingDiary(hex, topic) {
+  const now = new Date();
+  const timeLabel = now.toLocaleString("zh-TW", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  let diary = loadAdventureDiary();
+
+  diary.unshift({
+    type: "iching",                 // ★ 之後 diary 用這個來分類
+    time: timeLabel,
+    title: "熊熊易經卜卦",
+    topic: topic || "",
+    hexName: hex.name,              // 例如「☰ 乾為天」
+    trend: hex.trend || "",         // 大吉 / 提醒 / 挑戰…
+    shortMeaning: hex.shortMeaning || "",
+    note: hex.classic && hex.classic.note ? hex.classic.note : ""
+  });
+
+  if (diary.length > 100) {
+    diary = diary.slice(0, 100);
+  }
+  saveAdventureDiary(diary);
+}
 /* 🌱 白話版顯示（主題＋五大面向小提醒） */
 function renderModern(hex, topic) {
   var summaryEl = document.getElementById("modern-summary");
