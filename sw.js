@@ -2,7 +2,7 @@
 
 // ⚠️ 記得每次有大修改就改一下版本號（v1 → v2 → v3…）
 // 這樣舊的錯誤快取才會被清掉
-const CACHE_VERSION = "bear-iching-v3";
+const CACHE_VERSION = "bear-iching-v1";
 const CACHE_NAME = `bear-iching-cache-${CACHE_VERSION}`;
 
 // 需要離線快取的檔案（全部加上 /Bear8/）
