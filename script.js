@@ -803,7 +803,9 @@ hexagrams[63] = createHex(
   "象曰：火在水上，未濟。君子以慎辨物居方。",
   "未濟卦說：現在不適合急著結束。再檢查一次、再穩一下，就是成功。"
 );
-
+  // ＊＊最後加上這行，把這次卦象寫進冒險日記
+  appendIchingDiary(hex, topic);
+}
 // 其餘先塞 placeholder（理論上不會用到，但保險）
 for (let i = 8; i < 64; i++) {
   hexagrams[i] =
