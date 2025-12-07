@@ -803,9 +803,7 @@ hexagrams[63] = createHex(
   "象曰：火在水上，未濟。君子以慎辨物居方。",
   "未濟卦說：現在不適合急著結束。再檢查一次、再穩一下，就是成功。"
 );
-  // ＊＊最後加上這行，把這次卦象寫進冒險日記
-  appendIchingDiary(hex, topic);
-}
+
 // 其餘先塞 placeholder（理論上不會用到，但保險）
 for (let i = 8; i < 64; i++) {
   hexagrams[i] =
@@ -1450,7 +1448,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 真正執行卜卦的函式（本卦＋之卦＋寫日記）
   function performDivination(mode, topic, question) {
     var lines = generateSixLines(mode);
     var derived = computeDerivedHex(lines); // 之卦
@@ -1469,9 +1466,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     bearTextEl.textContent = bearMessage(hex, topic, question);
 
-    // 新增一筆日記
+    // ① 本站自己的易經日記（bearIchingDiaryV1）
     var diary = addDiaryEntry(mode, topic, question, hex, lines);
     renderDiaryList(diary, handleDiaryClick);
+
+    // ② 寫進「共用的熊熊冒險日記」（bearAdventureDiaryV1，給主站 diary.html 用）
+    appendIchingDiary(hex, topic);
 
     resultArea.classList.remove("hidden");
     resultArea.scrollIntoView({ behavior: "smooth" });
