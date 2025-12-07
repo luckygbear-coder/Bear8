@@ -17,24 +17,25 @@
   <!-- 樣式 -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- 🐻 熊熊回家按鈕樣式 -->
+  <!-- 🐻 Header 裡的「回家」按鈕樣式 -->
   <style>
-    .back-home-btn {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      z-index: 50;
+    .header-top-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 4px;
+    }
 
+    .back-home-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
 
-      padding: 6px 10px;
+      padding: 4px 10px;
       border-radius: 999px;
 
-      background: rgba(255, 247, 230, 0.9);
+      background: rgba(255, 247, 230, 0.95);
       border: 1px solid rgba(247, 219, 165, 0.95);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
 
       color: #5a3844;
       font-size: 11px;
@@ -47,44 +48,44 @@
     }
 
     .back-home-btn img {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       object-fit: cover;
       display: block;
     }
 
     .back-home-btn:hover {
-      background: rgba(255, 247, 230, 1);
+      background: #fff7e6;
       transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.22);
     }
 
     @media (max-width: 480px) {
       .back-home-btn {
-        top: 10px;
-        right: 10px;
-        padding: 5px 9px;
+        padding: 3px 8px;
         font-size: 10px;
       }
       .back-home-btn img {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
       }
     }
   </style>
 </head>
 <body>
-
-<!-- 🏡 右上角：熊熊村長回家按鈕 -->
-<a href="https://luckygbear-coder.github.io/HeroApp/index.html" class="back-home-btn">
-  <img src="icons/icon-192.png" alt="熊熊村長">
-  <span>回家</span>
-</a>
-
 <div class="page-wrap">
   <!-- Header -->
   <header class="site-header card">
+
+    <!-- 🏡 上方一排：右邊是回家按鈕 -->
+    <div class="header-top-row">
+      <a href="https://luckygbear-coder.github.io/HeroApp/index.html" class="back-home-btn">
+        <img src="icons/icon-192.png" alt="熊熊村長">
+        <span>回家</span>
+      </a>
+    </div>
+
     <h1>🐻 熊熊易經卜卦</h1>
     <p class="subtitle">三枚銅錢 · 六爻起卦 · 64 卦白話解說＋經典原文</p>
 
