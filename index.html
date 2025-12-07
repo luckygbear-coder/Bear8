@@ -16,8 +16,72 @@
 
   <!-- 樣式 -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- 🐻 熊熊回家按鈕樣式 -->
+  <style>
+    .back-home-btn {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 50;
+
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 6px 10px;
+      border-radius: 999px;
+
+      background: rgba(255, 247, 230, 0.9);
+      border: 1px solid rgba(247, 219, 165, 0.95);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+
+      color: #5a3844;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      white-space: nowrap;
+
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .back-home-btn img {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .back-home-btn:hover {
+      background: rgba(255, 247, 230, 1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    @media (max-width: 480px) {
+      .back-home-btn {
+        top: 10px;
+        right: 10px;
+        padding: 5px 9px;
+        font-size: 10px;
+      }
+      .back-home-btn img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
+
+<!-- 🏡 右上角：熊熊村長回家按鈕 -->
+<a href="https://luckygbear-coder.github.io/" class="back-home-btn">
+  <img src="icons/icon-192.png" alt="熊熊村長">
+  <span>回家</span>
+</a>
+
 <div class="page-wrap">
   <!-- Header -->
   <header class="site-header card">
@@ -155,6 +219,6 @@
     });
   }
 </script>
-<a href="https://luckygbear-coder.github.io/" class="back-home-btn">🏡 回熊熊村長的家</a>
+
 </body>
 </html>
